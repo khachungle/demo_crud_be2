@@ -57,20 +57,55 @@ class UserController extends Controller
        public function show(string $id)
     {
         //
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+        }
+       return view('user.viewuser',['user' => $user]);
     }
 
     public function edit(string $id)
     {
-        //
+        
+        $user = User::findOrFail($id);
+        return view('user.update', compact('user'));
     }
 
-        public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'phone' => 'nullable|string|max:20',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+
+        // Xử lý tải ảnh lên
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images'), $fileName);
+            $user->image = $fileName;
+        }
+
+        $user->save();
+
+        return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
     }
 
        public function destroy(string $id)
     {
-        //
+        
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+        }
+        $user->delete();
+        return redirect('/')->with('success', 'Xóa thành công !');
     }
 }

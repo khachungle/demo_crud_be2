@@ -38,6 +38,7 @@
             cursor: pointer;
             margin-right: 5px;
         }
+
         .action-btn.view {
             background-color: #28a745;
         }
@@ -53,7 +54,7 @@
 @endsection
 
 @section('content')
-    <h2>Danh sách User</h2>
+    <h2>View User</h2>
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -67,27 +68,17 @@
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>Ảnh</th>
-                    <th>Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+               
                     <tr>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
                         <td><img src="{{ asset($user->image) }}" alt="John's Image"></td>
-                        <td>
-                            <a href="{{ route('users.show', ['id' => $user->id]) }}" class="action-btn view">View</a>
-                            <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="action-btn edit">Edit</a>
-                            <form id="delete-form" action="{{ route('users.destroy', ['id' => $user->id]) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button class = "action-btn delete" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xoá người dùng này không?')">Delete</button>
-                            </form>
-                        </td>
                     </tr>
-                @endforeach
+              
             </tbody>
         </table>
     </div>
