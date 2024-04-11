@@ -31,7 +31,7 @@
 @section('content')
     <div class="form-register">
         <h2>Register</h2>
-        <form action="/" method="post" enctype="multipart/form-data">
+        <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="text" name="username" placeholder="Username" required>
             @if ($errors->has('username'))
