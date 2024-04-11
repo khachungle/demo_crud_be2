@@ -14,4 +14,6 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::resource('/', UserController::class);
+Route::get('/', [UserController::class, 'index'])->name('users.index');
+Route::get('create', [UserController::class, 'create'])->name('users.create');
+Route::post('create', [UserController::class, 'store'])->name('users.store');
