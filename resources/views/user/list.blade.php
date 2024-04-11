@@ -88,4 +88,8 @@
             </tbody>
         </table>
     </div>
+    <!-- Hiển thị liên kết phân trang -->
+    <div class="d-flex justify-content-center">
+        {{ $users->links() }}
+    </div>
 @endsection
