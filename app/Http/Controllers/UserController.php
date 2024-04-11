@@ -9,7 +9,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        // Lấy danh sách người dùng với phân trang
+        $users = User::paginate(3); // Số người dùng trên mỗi trang là 3
+        // Trả về view 'user.list' và truyền biến $users vào view
         return view('user.list', compact('users'));
     }
 
@@ -54,7 +56,7 @@ class UserController extends Controller
         return redirect('/')->with('success', 'Đăng ký user thành công !');
     }
 
-       public function show(string $id)
+    public function show(string $id)
     {
         //
         $user = User::find($id);
@@ -71,7 +73,7 @@ class UserController extends Controller
         return view('user.update', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'username' => 'required|string|max:255',
@@ -98,7 +100,7 @@ class UserController extends Controller
         return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
     }
 
-       public function destroy(string $id)
+    public function destroy(string $id)
     {
         
         $user = User::find($id);
