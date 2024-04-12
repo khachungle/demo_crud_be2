@@ -24,10 +24,15 @@ class UserController extends Controller
     {
         // validate dữ liệu trước khi thực hiện thêm user
         $request->validate([
-            'username' => 'required|unique:users,username',
-            'email' => 'required|unique:users,email|email',
-            'phone' => 'required|unique:users,phone|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
-            'image' => 'required|image|mimes:jpg,png,jpeg|max:5120'
+            'username' => 'required|min:6|max:30|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'phone' => [
+                'nullable',
+                'unique:users,phone', // Đặt unique và nullable trong cùng một mảng
+                'regex:/^0[0-9]{9,10}$/',
+                'digits_between:10,11'
+            ],
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // Chỉ định các loại file hình ảnh cho mimes
         ]);
 
         // Tạo user mới và lưu user
@@ -92,7 +97,7 @@ class UserController extends Controller
             $image = $request->file('image');
             $fileName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('images'), $fileName);
-            $user->image = $fileName;
+            $user->image = 'images/' . $fileName;
         }
 
         $user->save();
