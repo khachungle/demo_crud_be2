@@ -13,9 +13,17 @@ class UserController extends Controller
     public function index()
     {
         // Lấy danh sách người dùng với phân trang
-        $users = User::paginate(3); // Số người dùng trên mỗi trang là 3
+        //$users = User::paginate(3); // Số người dùng trên mỗi trang là 3
         // Trả về view 'user.list' và truyền biến $users vào view
-        return view('user.list', compact('users'));
+        //return view('user.list', compact('users'));
+
+        if(Auth::check()){
+            $users = User::paginate(3); // Số người dùng trên mỗi trang là 3
+            // Trả về view 'user.list' và truyền biến $users vào view
+            return view('user.list', ['users' => $users]);
+        }
+
+        return redirect("login")->withSuccess('You are not allowed to access');
     }
 
     public function create()
@@ -61,57 +69,76 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        //
-        $user = User::find($id);
-        if(!$user){
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-        }
-       return view('user.viewuser',['user' => $user]);
+
+
+       if(Auth::check()){
+                //
+                $user = User::find($id);
+                if(!$user){
+                    return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+                }
+               return view('user.viewuser',['user' => $user]);
+    }
+
+    return redirect("login")->withSuccess('You are not allowed to access');
     }
 
     public function edit(string $id)
     {
-        
-        $user = User::findOrFail($id);
-        return view('user.update', compact('user'));
+
+        if(Auth::check()){
+            $user = User::findOrFail($id);
+            return view('user.update', compact('user'));
+        }
+
+        return redirect("login")->withSuccess('You are not allowed to access');
     }
 
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
-            'phone' => 'nullable|string|max:20',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
-        ]);
-
-        $user = User::findOrFail($id);
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-
-        // Xử lý tải ảnh lên
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $fileName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('images'), $fileName);
-            $user->image = $fileName;
+   
+        if(Auth::check()){
+            $request->validate([
+                'username' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+                'phone' => 'nullable|string|max:20',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
+            ]);
+    
+            $user = User::findOrFail($id);
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+    
+            // Xử lý tải ảnh lên
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $fileName = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('images'), $fileName);
+                $user->image = $fileName;
+            }
+    
+            $user->save();
+    
+            return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
         }
 
-        $user->save();
-
-        return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
+        return redirect("login")->withSuccess('You are not allowed to access');
     }
 
     public function destroy(string $id)
     {
-        
-        $user = User::find($id);
-        if(!$user){
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+
+        if(Auth::check()){
+            $user = User::find($id);
+            if(!$user){
+                return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+            }
+            $user->delete();
+            return redirect('/')->with('success', 'Xóa thành công !');
         }
-        $user->delete();
-        return redirect('/')->with('success', 'Xóa thành công !');
+
+        return redirect("login")->withSuccess('You are not allowed to access');
     }
 
     /**
