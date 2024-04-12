@@ -27,11 +27,12 @@ class UserController extends Controller
             'username' => 'required|min:6|max:30|unique:users,username',
             'email' => 'required|email|unique:users,email',
             'phone' => [
-                'nullable',
+                'required',
                 'unique:users,phone', // Đặt unique và nullable trong cùng một mảng
                 'regex:/^0[0-9]{9,10}$/',
                 'digits_between:10,11'
             ],
+            'password' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // Chỉ định các loại file hình ảnh cho mimes
         ]);
 
@@ -65,15 +66,15 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'Người dùng không tồn tại'], 404);
         }
-       return view('user.viewuser',['user' => $user]);
+        return view('user.viewuser', ['user' => $user]);
     }
 
     public function edit(string $id)
     {
-        
+
         $user = User::findOrFail($id);
         return view('user.update', compact('user'));
     }
@@ -82,7 +83,7 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
         ]);
@@ -95,7 +96,7 @@ class UserController extends Controller
         // Xử lý tải ảnh lên
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $fileName = time().'.'.$image->getClientOriginalExtension();
+            $fileName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('images'), $fileName);
             $user->image = 'images/' . $fileName;
         }
@@ -113,9 +114,9 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        
+
         $user = User::find($id);
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'Người dùng không tồn tại'], 404);
         }
         $user->delete();
