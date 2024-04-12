@@ -24,3 +24,6 @@ Route::put('users/{id}', [UserController::class, 'update'])->name('users.update'
 Route::get('/', [UserController::class, 'index'])->name('users.index');
 Route::get('create', [UserController::class, 'create'])->name('users.create');
 Route::post('create', [UserController::class, 'store'])->name('users.store');
+Route::get('login', [UserController::class, 'login'])->name('login');
+Route::post('login', [UserController::class, 'authUser'])->name('user.authUser');
+Route::get('signout', [UserController::class, 'signOut'])->name('signout');

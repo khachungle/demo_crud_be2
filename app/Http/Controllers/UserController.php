@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
+use Session;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -109,5 +112,43 @@ class UserController extends Controller
         }
         $user->delete();
         return redirect('/')->with('success', 'Xóa thành công !');
+    }
+
+    /**
+     * trang dang nhap
+     */
+    public function login()
+    {
+        return view('user.login');
+    }
+
+        /**
+     * dang nhap
+     */
+    public function authUser(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('/')
+                ->withSuccess('Signed in');
+        }
+
+        return redirect("login")->withSuccess('Login details are not valid');
+    }
+
+    /**
+     * dang xuat
+     */
+    public function signOut() {
+        Session::flush();
+        Auth::logout();
+
+        return Redirect('login');
     }
 }
