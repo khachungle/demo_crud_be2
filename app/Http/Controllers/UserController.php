@@ -74,56 +74,32 @@ class UserController extends Controller
     }
 
     public function show(string $id)
-    {
-<<<<<<< HEAD
-        //
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-        }
-        return view('user.viewuser', ['user' => $user]);
-=======
-
-
-       if(Auth::check()){
+        {
+            if(Auth::check()){
                 //
                 $user = User::find($id);
                 if(!$user){
                     return response()->json(['message' => 'Người dùng không tồn tại'], 404);
                 }
                return view('user.viewuser',['user' => $user]);
-    }
+            }
 
-    return redirect("login")->withSuccess('You are not allowed to access');
->>>>>>> login-logout
-    }
+            return redirect("login")->withSuccess('You are not allowed to access');
+        }
 
     public function edit(string $id)
     {
 
-<<<<<<< HEAD
-        $user = User::findOrFail($id);
-        return view('user.update', compact('user'));
-=======
         if(Auth::check()){
             $user = User::findOrFail($id);
             return view('user.update', compact('user'));
         }
 
         return redirect("login")->withSuccess('You are not allowed to access');
->>>>>>> login-logout
     }
 
     public function update(Request $request, string $id)
     {
-<<<<<<< HEAD
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'phone' => 'nullable|string|max:20',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
-        ]);
-=======
    
         if(Auth::check()){
             $request->validate([
@@ -150,19 +126,10 @@ class UserController extends Controller
     
             return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
         }
->>>>>>> login-logout
 
         return redirect("login")->withSuccess('You are not allowed to access');
     }
 
-<<<<<<< HEAD
-        // Xử lý tải ảnh lên
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $fileName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $fileName);
-            $user->image = 'images/' . $fileName;
-=======
     public function destroy(string $id)
     {
 
@@ -173,7 +140,6 @@ class UserController extends Controller
             }
             $user->delete();
             return redirect('/')->with('success', 'Xóa thành công !');
->>>>>>> login-logout
         }
 
         return redirect("login")->withSuccess('You are not allowed to access');
@@ -192,12 +158,6 @@ class UserController extends Controller
      */
     public function authUser(Request $request)
     {
-<<<<<<< HEAD
-
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-=======
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -208,7 +168,6 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             return redirect()->intended('/')
                 ->withSuccess('Signed in');
->>>>>>> login-logout
         }
 
         return redirect("login")->withSuccess('Login details are not valid');

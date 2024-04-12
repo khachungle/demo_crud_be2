@@ -21,9 +21,6 @@ Route::get('users/{id}', [UserController::class, 'show'])->name('users.show');
 Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
-<<<<<<< HEAD
-=======
 Route::get('login', [UserController::class, 'login'])->name('login');
 Route::post('login', [UserController::class, 'authUser'])->name('user.authUser');
 Route::get('signout', [UserController::class, 'signOut'])->name('signout');
->>>>>>> login-logout
