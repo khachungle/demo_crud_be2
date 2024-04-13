@@ -90,7 +90,7 @@ class UserController extends Controller
             $image = $request->file('image');
             $fileName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('images'), $fileName);
-            $user->image = $fileName;
+            $user->image = 'images/' .$fileName;
         }
 
         $user->save();
