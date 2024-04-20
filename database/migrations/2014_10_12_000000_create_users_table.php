@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('phone')->unique();
+            $table->string('interest');
             $table->string('password');
             $table->string('image');
             $table->rememberToken();

@@ -67,6 +67,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
+                    <th>Sở thích</th>
                     <th>Ảnh</th>
                 </tr>
             </thead>
@@ -76,6 +77,7 @@
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
+                        <td>{{ $user->interest }}</td>
                         <td><img src="{{ asset($user->image) }}" alt="John's Image"></td>
                     </tr>
               

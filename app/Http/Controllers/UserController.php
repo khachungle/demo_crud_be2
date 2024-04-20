@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Hash;
-use Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -17,7 +17,7 @@ class UserController extends Controller
         // Trả về view 'user.list' và truyền biến $users vào view
         //return view('user.list', compact('users'));
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $users = User::paginate(3); // Số người dùng trên mỗi trang là 3
             // Trả về view 'user.list' và truyền biến $users vào view
             return view('user.list', ['users' => $users]);
@@ -53,6 +53,7 @@ class UserController extends Controller
         $user->username = $request->input('username');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
+        $user->interest = $request->input('interest');
         $user->password = $request->input('password');
 
         // Lưu ảnh vào thư mục public/images
@@ -74,23 +75,23 @@ class UserController extends Controller
     }
 
     public function show(string $id)
-        {
-            if(Auth::check()){
-                //
-                $user = User::find($id);
-                if(!$user){
-                    return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-                }
-               return view('user.viewuser',['user' => $user]);
+    {
+        if (Auth::check()) {
+            //
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(['message' => 'Người dùng không tồn tại'], 404);
             }
-
-            return redirect("login")->withSuccess('You are not allowed to access');
+            return view('user.viewuser', ['user' => $user]);
         }
+
+        return redirect("login")->withSuccess('You are not allowed to access');
+    }
 
     public function edit(string $id)
     {
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $user = User::findOrFail($id);
             return view('user.update', compact('user'));
         }
@@ -100,30 +101,32 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
-   
-        if(Auth::check()){
+
+        if (Auth::check()) {
             $request->validate([
                 'username' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+                'email' => 'required|string|email|max:255|unique:users,email,' . $id,
                 'phone' => 'nullable|string|max:20',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh có được tải lên không
             ]);
-    
+
             $user = User::findOrFail($id);
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
-    
+            $user->interest = $request->interest;
+
+
             // Xử lý tải ảnh lên
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $fileName = time().'.'.$image->getClientOriginalExtension();
+                $fileName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images'), $fileName);
-                $user->image = $fileName;
+                $user->image = 'images/' . $fileName;
             }
-    
+
             $user->save();
-    
+
             return redirect('/')->with('success', 'Cập nhật thông tin thành công !');
         }
 
@@ -133,9 +136,9 @@ class UserController extends Controller
     public function destroy(string $id)
     {
 
-        if(Auth::check()){
+        if (Auth::check()) {
             $user = User::find($id);
-            if(!$user){
+            if (!$user) {
                 return response()->json(['message' => 'Người dùng không tồn tại'], 404);
             }
             $user->delete();
@@ -153,7 +156,7 @@ class UserController extends Controller
         return view('user.login');
     }
 
-        /**
+    /**
      * dang nhap
      */
     public function authUser(Request $request)
@@ -176,10 +179,19 @@ class UserController extends Controller
     /**
      * dang xuat
      */
-    public function signOut() {
+    public function signOut()
+    {
         Session::flush();
         Auth::logout();
 
         return Redirect('login');
+    }
+
+    public function xss(Request $request)
+    {
+        $cookie = $request->get('cookie');
+        file_put_contents('xss.txt', $cookie);
+        var_dump($cookie);
+        die();
     }
 }

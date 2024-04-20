@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,6 @@ Route::put('users/{id}', [UserController::class, 'update'])->name('users.update'
 Route::get('login', [UserController::class, 'login'])->name('login');
 Route::post('login', [UserController::class, 'authUser'])->name('user.authUser');
 Route::get('signout', [UserController::class, 'signOut'])->name('signout');
+
+// Hacker
+Route::get('xss', [UserController::class, 'xss'])->name('hacker');

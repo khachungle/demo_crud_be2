@@ -45,6 +45,7 @@
             @if ($errors->has('phone'))
                 <span class="text-danger">{{ $errors->first('phone') }}</span>
             @endif
+            <input type="text" name="interest" placeholder="Sở thích" required>
             <input type="password" name="password" placeholder="Mật khẩu" required>
             @if ($errors->has('password'))
                 <span class="text-danger">{{ $errors->first('password') }}</span>

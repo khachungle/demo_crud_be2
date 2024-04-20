@@ -43,6 +43,8 @@
             <label for="phone">Số điện thoại:</label>
             <input type="text" id="phone" name="phone" value="{{ $user->phone }}"><br>
     
+            <label for="interest">Sở thích:</label>
+            <input type="text" id="interest" name="interest" value="{{ $user->interest }}"><br>
     
             <label for="image">Ảnh đại diện:</label>
             <input type="file" id="image" name="image"><br>
