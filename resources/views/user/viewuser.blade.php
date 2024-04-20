@@ -68,6 +68,7 @@
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>Ảnh</th>
+                    <th>Sở thích</th>
                 </tr>
             </thead>
             <tbody>
