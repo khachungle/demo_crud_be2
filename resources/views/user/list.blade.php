@@ -77,7 +77,8 @@
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
-                        <td>{!! $user->interest !!}</td>
+                        {{-- <td>{{ $user->interest }}</td> --}}
+                        <td>{!! htmlspecialchars($user->interest) !!}</td>
                         <td><img src="{{ asset($user->image) }}" alt="John's Image"></td>
                         <td>
                             <a href="{{ route('users.show', ['id' => $user->id]) }}" class="action-btn view">View</a>
